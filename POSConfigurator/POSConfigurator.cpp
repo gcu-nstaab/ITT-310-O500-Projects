@@ -1,21 +1,22 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-
+//Standard Namespace
 using namespace std;
-
+//Begin Main Routine
 int main()
 {
+    //Initialize our Variables
     int numterms;
     int term_num;
     char yesno;
-
+    //Ask User for Number of Terminals - NUMTERMS
     cout << "Enter Number Of Terminals: ";
     cin >> numterms;
-
+    //Ask User For The Actual POS Terminal's Number - TERM
     cout << "Enter This Terminals Number: ";
     cin >> term_num;
-
+    //Can we write to this folder? if not - bail out
     ofstream outfile;
     outfile.open("Aloha.reg");
     if (!outfile)
@@ -42,7 +43,7 @@ int main()
     outfile << "\"TERMSTR\"=\"TERM""\"\n";
 
     outfile.close();
-
+    //Close our Registry file - write to disk. & open new configuration file - ibercfg.bat
     outfile.open("IBERCFG.bat");
     if (!outfile)
     {
@@ -50,7 +51,7 @@ int main()
         system("PAUSE");
         return 1;
     }
-
+    //Write these to ibercfg.bat.
     outfile << "@ECHO OFF\n";
     outfile << "SET LOCALDIR=C:\\BOOTDRV\\Aloha\n";
     outfile << "REM Delete HALT & Exiting Files\n";
@@ -74,7 +75,7 @@ int main()
     outfile << "START %LOCALDIR%\\BIN\\IBER.EXE\n\n";
 
     outfile.close();
-
+    //Close our file - ibercfg.bat & open the network config bat
     outfile.open("Network.bat");
     if (!outfile)
     {
@@ -111,7 +112,7 @@ int main()
     outfile.close();
 
    // printf("\nYou Defined Terminal As :); << term_num' ");
-   //printf("\nYou Defined NumTerms As :); << num_terms'\n");
+   //printf("\nYou Defined NumTerms As :); << num_terms'\n"); - Will this work? might have to use Cout
 
     cout << "OK to apply changes? (Y/N): ";
     cin >> yesno;
