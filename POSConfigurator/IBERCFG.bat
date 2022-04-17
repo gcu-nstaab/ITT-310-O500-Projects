@@ -1,0 +1,27 @@
+@ECHO OFF
+SET LOCALDIR=C:\BOOTDRV\Aloha
+REM Delete HALT & Exiting Files
+IF EXIST %LOCALDIR%\TMP\EXITING DEL %LOCALDIR%\TMP\EXITING >NUL
+IF EXIST C:\HALT DEL C:\HALT >NUL
+
+REM Ensure Nothing In BIN, Data, BMP Are Read Only
+ATTRIB -R %LOCALDIR%\BIN\*.* >NUL
+ATTRIB -R %LOCALDIR%\DATA\*.* >NUL
+ATTRIB -R %LOCALDIR%\BMP\*.* >NUL
+
+REM Ensure Nothing In NEWBIN Is Read Only, Then If Files Exist, Copy Them Into Bin And Delete From Newbin
+IF EXIST %LOCALDIR%\NEWBIN\*.* ATTRIB -R %LOCALDIR%\NEWBIN\*.* >NUL
+IF EXIST %LOCALDIR%\NEWBIN\*.* COPY %LOCALDIR%\NEWBIN\*.* %LOCALDIR%\BIN
+ECHO Y | DEL %LOCALDIR%\NEWBIN\*.*
+
+REM Ensure Terminal Has Aloha.INI
+IF NOT EXIST %LOCALDIR%\DATA\Aloha.INI COPY \%SERVER%\BOOTDRV\Aloha\DATA\Aloha.INI %LOCALDIR%\DATA
+REM Ensure If Terminal Has OCD, That It's Software Gets Loaded
+IF EXIST %LOCALDIR%\BIN\RSSLoad.EXE START %LOCALDIR%\BIN\RSSLoad.EXE
+
+REM Let's Sync the Time With the Aloha Server Before Starting Iber...
+NET TIME \\%SERVER% /SET /Y
+
+REM Now.. Finally, Start IBER!
+START %LOCALDIR%\BIN\IBER.EXE
+
